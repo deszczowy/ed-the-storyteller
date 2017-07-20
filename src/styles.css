@@ -1,0 +1,37 @@
+@font-face {
+  font-family: textFont;
+  src: url('data/fonts/zillaslab/ZillaSlab-Regular.ttf');
+}
+
+@font-face {
+  font-family: topBarTitleFont;
+  src: url('data/fonts/zillaslab/ZillaSlab-Italic.ttf');
+}
+
+@font-face {
+  font-family: topBarFont;
+  src: url('data/fonts/hind/Hind-Medium.ttf');
+}
+
+@font-face {
+  font-family: headerFont;
+  src: url('data/fonts/hind/Hind-Regular.ttf');
+}
+
+html, body{
+  padding: 0; margin: 0;
+  height: 98%;
+  width: 100%;
+  background-color: #fff;
+}
+
+div{
+  font-family: headerFont;
+}
+
+.wallpaper{
+  background-image: url('data/gfx/ed.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+

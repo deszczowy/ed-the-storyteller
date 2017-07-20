@@ -1,0 +1,16 @@
+<!-- storyboard cards -->
+
+<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" *ngFor="let element of elements">
+  <div class="storyboard-card">
+    <div class="header"><p>{{element.name}}</p></div>
+    <div class="content">{{element.content}}</div>
+    <div class="controls">
+      <div class="label">#1</div>
+      <div class="buttons">
+        <button title="Edit card" (click)="editCard(element)"><i class="fa fa-pencil-square-o"></i></button>
+        <button title="Destroy it and throw away" (click)="deleteCard(element)"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="controls-clear"></div>
+    </div>
+  </div>
+</div>

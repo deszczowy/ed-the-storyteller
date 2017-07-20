@@ -1,0 +1,19 @@
+/* Editor */
+
+.editor-pad{
+  background-color: #fff;
+  width: 600px;
+  height: 100%;
+  position: fixed;
+  z-index: 20;
+  top: 0px;
+  left: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-box-shadow: 3px 3px 3px -2px #555; /* horizontal position, vertical position, blur radius, spread, color */
+          box-shadow: 3px 3px 3px -2px #555;
+}
+
+.editor-pad form{
+  margin-top: 25px;
+}

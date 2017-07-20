@@ -1,0 +1,132 @@
+li[data-title]:hover:after {
+  content: attr(data-title);
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 41;
+  background-color:transparent;
+  white-space: nowrap;
+  font-size: 10px;
+  width: 100px;
+  text-align: center;
+  color: #fff;
+}
+
+/* top bar */
+
+.top-bar{
+  background-color: #fff;
+  position: fixed;
+  z-index: 50;
+  top: 0px;
+  right: 0px;
+  width: 600px;
+  height: 25px;
+  border-radius: 0 0 0 4px;
+  -webkit-box-shadow: 3px 3px 3px -2px #aaa; /* horizontal position, vertical position, blur radius, spread, color */
+          box-shadow: 3px 3px 3px -2px #aaa;
+}
+
+.top-bar .title{
+  width: 440px;
+  overflow: hidden;
+  text-align: right;
+  float: left;
+}
+
+.top-bar .title p{
+  height: 25px;
+  padding: 0px;
+  margin:0px;
+  line-height: 25px;
+  vertical-align: middle;
+  font-family: topBarFont;
+}
+
+.top-bar .title p em{
+  font-family: topBarTitleFont;
+  color: #17698c;
+}
+
+.top-bar .title p em:before {
+  content: '\00201E';
+  color:#5490ab;
+}
+
+.top-bar .title p em:after {
+  content: '\00201D';
+  color:#5490ab;
+}
+.top-bar .tray{
+  width: 135px;
+  float: right;
+  border-left:#ccc;
+}
+
+.top-bar .tray button{
+  font-size: 10px;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+  padding-top: 3px;
+  height: 25px;
+  width: 24px;
+  background-color: #fff;
+}
+
+.top-bar .tray button:hover{
+  background-color:#5490ab;
+  color:#fff;
+}
+
+.side-panel{
+  background-color: #17698c;
+  width:100px;
+  position: fixed;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 30;
+  -webkit-box-shadow: 3px 3px 3px -2px #aaa; /* horizontal position, vertical position, blur radius, spread, color */
+          box-shadow: 3px 3px 3px -2px #aaa;
+}
+
+/* floating menu */
+
+.side-panel .floating-menu{
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  margin-top: -100px;
+}
+
+.side-panel .floating-menu ul{
+  padding:0px;
+  margin:0px;
+  width: 100px;
+  list-style-type: none;
+}
+
+.side-panel .floating-menu li{
+  padding:0px;
+  margin:0px;
+  width:100%;
+  height: 50px;
+  vertical-align:middle;
+  line-height: 50px;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+}
+.side-panel .floating-menu li:hover{
+  background-color:#5490ab;
+  cursor: pointer;
+}
+
+/* submenu */
+
+.sub-side-panel{
+  left: 100px;
+  z-index: 40;
+}

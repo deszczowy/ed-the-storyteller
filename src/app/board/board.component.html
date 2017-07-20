@@ -1,0 +1,10 @@
+<div class="main-window">
+  <div class="container-fluid">
+    <div class="row">
+      <story-card [elements]="elements" (action)="onAction($event)"></story-card>
+    </div>
+  </div>
+</div>
+<story-pad [element]="activeCard" (back)="onAction($event)"></story-pad>
+
+

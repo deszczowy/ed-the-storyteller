@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ed, The Storyteller</title>
+    <meta charset="utf-8">
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+  </head>
+
+  <body class="wallpaper">
+    <story-root></story-root>
+
+      <!-- Angular2 Electron API connection fix? -->
+      <script>
+        var electron = require("electron");
+        var fs = require("fs");
+      </script>
+      <!-- jQuery loading fix?  -->
+      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+      <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+      <script>if (window.module) module = window.module;</script>
+
+  </body>
+</html>

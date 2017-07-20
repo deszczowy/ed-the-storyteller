@@ -1,0 +1,71 @@
+/* storyboard card */
+
+.storyboard-card{
+  width: 100%;
+  height: 200px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  background-color: #fff;
+  z-index: 10;
+  -webkit-box-shadow: 3px 3px 3px -2px #555; /* horizontal position, vertical position, blur radius, spread, color */
+          box-shadow: 3px 3px 3px -2px #555;
+}
+
+.storyboard-card .header{
+  height: 46px;
+  border-bottom: 1px solid #ccc;
+  padding: 0px;
+}
+
+.storyboard-card .header p{
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+  padding: 3px;
+  overflow: hidden;
+}
+
+.storyboard-card .content{
+  padding: 3px;
+  overflow-y: auto;
+  width: 100%;
+  height: 128px;
+  font-family: textFont;
+}
+
+.storyboard-card .controls{
+  width: 100%;
+  height: 25px;
+  text-align: right;
+}
+
+.storyboard-card .controls .buttons{
+  float: right;
+}
+
+.storyboard-card .controls button{
+  width: 20px;
+  height: 20px;
+  border: 0px;
+  border-radius: 4px;
+  margin-right: 2px;
+  margin-top: 2px;
+  padding: 0px;
+  background-color: #fff;
+  color:#aaa;
+}
+
+.storyboard-card .controls .label{
+  float:left;
+  color: #aaa;
+  height: 25px;
+  line-height: 24px;
+  margin:0px;
+  padding: 0px;
+  margin-left: 5px;
+}
+
+.storyboard-card .controls .controls-clear{
+  clear: both;
+}

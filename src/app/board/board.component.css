@@ -1,0 +1,9 @@
+/* storyboard */
+
+.main-window{
+  background-color: transparent;
+  margin-left: 100px;
+  width: auto;
+  margin-top:20px;
+  z-index: 0;
+}
