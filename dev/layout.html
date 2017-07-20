@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Layout prototype</title>
+    <meta charset="utf=8">
+
+    <style>
+      @font-face {
+        font-family: textFont;
+        src: url(fonts/zillaslab/ZillaSlab-Regular.ttf);
+      }
+
+      @font-face {
+        font-family: topBarTitleFont;
+        src: url(fonts/zillaslab/ZillaSlab-Italic.ttf);
+      }
+
+      @font-face {
+        font-family: topBarFont;
+        src: url(fonts/hind/Hind-Medium.ttf);
+      }
+
+      @font-face {
+        font-family: headerFont;
+        src: url(fonts/hind/Hind-Regular.ttf);
+      }
+
+      html, body{
+        padding: 0; margin: 0;
+        height: 98%;
+        width: 100%;
+        background-color: #fff;
+      }
+
+      div{
+        font-family: headerFont;
+      }
+
+      .main-window{
+        background-color: transparent;
+        margin-left: 100px;
+        width: auto;
+        margin-top:20px;
+        z-index: 0;
+      }
+
+      .wallpaper{
+        background-image: url('gfx/ed.png');
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+
+      .top-bar{
+        background-color: #fff;
+        position: fixed;
+        z-index: 50;
+        top: 0px;
+        right: 0px;
+        width: 500px;
+        height: 25px;
+        border-radius: 0 0 0 4px;
+        -webkit-box-shadow: 3px 3px 3px -2px #aaa; /* horizontal position, vertical position, blur radius, spread, color */
+                box-shadow: 3px 3px 3px -2px #aaa;
+      }
+
+      .top-bar .title{
+        width: 440px;
+        overflow: hidden;
+        text-align: right;
+        float: left;
+      }
+
+      .top-bar .title p{
+        height: 25px;
+        padding: 0px;
+        margin:0px;
+        line-height: 25px;
+        vertical-align: middle;
+        font-family: topBarFont;
+      }
+
+      .top-bar .title p em{
+        font-family: topBarTitleFont;
+        color: #17698c;
+      }
+
+      .top-bar .title p em:before {
+        content: '\00201E';
+        color:#5490ab;
+      }
+
+      .top-bar .title p em:after {
+        content: '\00201D';
+        color:#5490ab;
+      }
+      .top-bar .tray{
+        width: 52px;
+        float: right;
+        border-left:#ccc;
+      }
+
+      .top-bar .tray button{
+        font-size: 10px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        padding-top: 3px;
+        height: 25px;
+        width: 24px;
+        background-color: #fff;
+      }
+
+      .top-bar .tray button:hover{
+        background-color:#5490ab;
+        color:#fff;
+      }
+
+      .side-panel{
+        background-color: #17698c;
+        width:100px;
+        position: fixed;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 30;
+        -webkit-box-shadow: 3px 3px 3px -2px #aaa; /* horizontal position, vertical position, blur radius, spread, color */
+                box-shadow: 3px 3px 3px -2px #aaa;
+      }
+
+      .side-panel .floating-menu{
+        height: 200px;
+        position: absolute;
+        top: 50%;
+        margin-top: -100px;
+      }
+
+      .side-panel .floating-menu ul{
+        padding:0px;
+        margin:0px;
+        width: 100px;
+        list-style-type: none;
+      }
+
+      .side-panel .floating-menu li{
+        padding:0px;
+        margin:0px;
+        width:100%;
+        height: 50px;
+        vertical-align:middle;
+        line-height: 50px;
+        text-align: center;
+        font-size: 20px;
+        color: #fff;
+      }
+      .side-panel .floating-menu li:hover{
+        background-color:#5490ab;
+        cursor: pointer;
+      }
+
+      .sub-side-panel{
+        left: 100px;
+        z-index: 40;
+      }
+
+      .storyboard-card{
+        width: 100%;
+        height: 200px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        background-color: #fff;
+        z-index: 10;
+        -webkit-box-shadow: 3px 3px 3px -2px #555; /* horizontal position, vertical position, blur radius, spread, color */
+                box-shadow: 3px 3px 3px -2px #555;
+      }
+
+      .storyboard-card .header{
+        height: 46px;
+        border-bottom: 1px solid #ccc;
+        padding: 0px;
+      }
+
+      .storyboard-card .header p{
+        height: 40px;
+        line-height: 40px;
+        vertical-align: middle;
+        padding: 3px;
+        overflow: hidden;
+      }
+
+      .storyboard-card .content{
+        padding: 3px;
+        overflow-y: auto;
+        width: 100%;
+        height: 128px;
+        font-family: textFont;
+      }
+
+      .storyboard-card .controls{
+        width: 100%;
+        height: 25px;
+        text-align: right;
+      }
+
+      .storyboard-card .controls .buttons{
+        float: right;
+      }
+
+      .storyboard-card .controls button{
+        width: 20px;
+        height: 20px;
+        border: 0px;
+        border-radius: 4px;
+        margin-right: 2px;
+        margin-top: 2px;
+        padding: 0px;
+        background-color: #fff;
+        color:#aaa;
+      }
+
+      .storyboard-card .controls .label{
+        float:left;
+        color: #aaa;
+        height: 25px;
+        line-height: 24px;
+        margin:0px;
+        padding: 0px;
+        margin-left: 5px;
+      }
+
+      .storyboard-card .controls .controls-clear{
+        clear: both;
+      }
+
+      li[data-title]:hover:after {
+        content: attr(data-title);
+        color: #333;
+        position: absolute;
+        left: 0;
+        top: 100%;
+        z-index: 41;
+        background-color:transparent;
+        white-space: nowrap;
+        font-size: 10px;
+        width: 100px;
+        text-align: center;
+        color: #fff;
+      }
+
+      .editor-pad{
+        background-color: #fff;
+        width: 600px;
+        height: 100%;
+        position: fixed;
+        z-index: 20;
+        top: 0px;
+        left: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-box-shadow: 3px 3px 3px -2px #555; /* horizontal position, vertical position, blur radius, spread, color */
+                box-shadow: 3px 3px 3px -2px #555;
+      }
+
+      .editor-pad form{
+        margin-top: 25px;
+      }
+  </style>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+  </head>
+
+  <body class="wallpaper">
+
+    <div class="main-window">
+      <div class="container-fluid">
+
+              <div class="row">
+                <!-- storyboard card start -->
+                <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+                  <div class="storyboard-card">
+                    <div class="header"><p>Storyboard element header</p></div>
+                    <div class="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus malesuada velit, et pellentesque velit tempor at.</div>
+                    <div class="controls">
+                      <div class="label">#1</div>
+                      <div class="buttons">
+                        <button title="Edit card"><i class="fa fa-pencil-square-o"></i></button>
+                        <button title="Destroy it and throw away"><i class="fa fa-times"></i></button>
+                      </div>
+                      <div class="controls-clear"></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- storyboard card end -->
+              </div>
+
+      </div>
+    </div>
+
+    <!-- project info start -->
+    <div class="top-bar">
+      <div class="title">
+        <p>Ed is now telling the <em>working title</em> story.</p></div>
+      <div class="tray">
+        <button title="Show statistics"><i class="fa fa-line-chart" aria-hidden="true"></i></button>
+        <button title="Full menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <!-- project info end -->
+
+    <!-- main menu start -->
+    <div class="side-panel">
+      <div class="floating-menu">
+        <ul>
+          <li data-title="New storyboard card"><i class="fa fa-plus" aria-hidden="true"></i></li>
+          <li data-title="New resource"><i class="fa fa-user-plus" aria-hidden="true"></i></li>
+          <li data-title="Resource list"><i class="fa fa-list" aria-hidden="true"></i></li>
+          <li data-title="Search"><i class="fa fa-search" aria-hidden="true"></i></li>
+        </ul>
+      </div>
+    </div>
+    <!-- main menu end -->
+
+    <!-- sub menu start -->
+    <div class="side-panel sub-side-panel" hidden>
+      <div class="floating-menu">
+        <ul>
+          <li data-title="Actors and characters"><i class="fa fa-user fa-fw" aria-hidden="true"></i> Actor</li>
+          <li data-title="Items"><i class="fa fa-rocket fa-fw" aria-hidden="true"></i> Item</li>
+          <li data-title="Places, landmarks"><i class="fa fa-map-pin fa-fw" aria-hidden="true"></i> Place</li>
+          <li data-title="Project notes"><i class="fa fa-sticky-note fa-fw" aria-hidden="true"></i> Note</li>
+        </ul>
+      </div>
+    </div>
+    <!-- sub menu end -->
+
+    <!-- editor pad start-->
+    <div class="editor-pad" hidden>
+      <div class="constainer">
+        <div class="row">
+          <div class="col-sm-8 col-sm-offset-2">
+
+          <form role="form">
+            <h4>Actors</h4>
+            <div class="form-group">
+              <label for="resName">Actor name</label>
+              <input type="text" class="form-control" id="resName" placeholder="e.g. Little Prince">
+            </div>
+
+            <div class="form-group">
+              <label for="resDescription">Description</label>
+              <textarea class="form-control" id="resDescription" rows="15" placeholder="Some words"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-default">Save</button>
+            <button type="submit" class="btn btn-default">Clear</button>
+          </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- editor pad end -->
+
+    <!-- resources list start -->
+    <div class="editor-pad" hidden>
+      <div class="col-sm-8 col-sm-offset-2">
+        <h4>Resource name</h4>
+        <div class="row table-responsive table-scrollable">
+          <div class="col-sm-12">
+
+            <table class="table table-hover">
+              <tbody>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+                <tr><td>Jan Kowalski</td></tr>
+                <tr><td>Jakub Nowak</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- resources list end -->
+
+  </body>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
+
+</html>
