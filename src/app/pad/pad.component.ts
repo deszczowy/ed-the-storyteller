@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { DataService } from './../service/data.service';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { StoryBoardElement } from './../classess/story-board-element.class';
 
 @Component({
@@ -7,9 +8,14 @@ import { StoryBoardElement } from './../classess/story-board-element.class';
   styleUrls: ['./pad.component.css']
 })
 
-export class PadComponent {
+export class PadComponent implements OnInit {
   @Input() element: StoryBoardElement = null;
   @Output() back: EventEmitter<StoryBoardElement> = new EventEmitter<StoryBoardElement>();
+
+  constructor (private data: DataService) {}
+
+  ngOnInit() {
+  }
 
   quitEdit() {
     this.element = null;
@@ -17,7 +23,9 @@ export class PadComponent {
   }
 
   save() {
+    this.data.saveElement(this.element);
     alert('Save changes in element');
+    this.quitEdit();
   }
 
   clear() {

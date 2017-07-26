@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { CardComponent } from './card/card.component';
 import { PadComponent } from './pad/pad.component';
+import { DataService } from './service/data.service';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { PadComponent } from './pad/pad.component';
     BrowserModule,
     FormsModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,40 +2,62 @@ import { StoryBoardElement } from './story-board-element.class';
 import { StoryBoardProject } from './story-board-project.class';
 
 export class Loader {
-  private elementsArray: StoryBoardElement[];
-  private projectData: StoryBoardProject;
 
-  private fileName: string;
-  private fileLocalization: string;
-  private resourceName: string;
+  private d: string; // path delimiter os-independent
 
-  constructor() { }
+  // element data
+  private id = 0;
+  // processing
+  private extension = '';
+  private command = '';
+  private argument = '';
+  private pins = false;
 
-  private debug() {
-    alert(this.projectData.localization);
-    alert(this.projectData.file);
-    alert(this.projectData.name);
+  constructor(
+    private elementsArray: StoryBoardElement[],
+    private projectData: StoryBoardProject
+  ) {
+    this.d = path.sep;
   }
 
-  private decomposeFileName(fileName: string): void {
+  private debug() {
+    alert('Localization: ' + this.projectData.localization);
+    alert('Project root file: ' + this.projectData.file);
+    alert('Project name: ' + this.projectData.name);
+    alert('Project description: ' + this.projectData.description);
+
+    this.elementsArray.forEach(element => {
+      alert(JSON.stringify(element));
+    });
+  }
+
+  private retrieveInitialProjectData(fileName: string): boolean {
     if (fileName) {
+      let f: string;
+
       // the border
-      const index = (fileName.indexOf('\\') >= 0 ? fileName.lastIndexOf('\\') : fileName.lastIndexOf('/'));
+      const index = fileName.lastIndexOf(this.d);
 
-      this.fileName = fileName.substring(index);
-      if (this.fileName.indexOf('\\') === 0 || this.fileName.indexOf('/') === 0) {
-        this.fileName = this.fileName.substring(1);
+      f = fileName.substring(index);
+      if (0 === f.indexOf(this.d)) {
+        f = f.substring(1);
       }
+      this.projectData.file = f;
 
-      this.resourceName = this.fileName.replace(new RegExp('_', 'g'), ' ');
-      this.resourceName = this.resourceName.substring(0, this.resourceName.lastIndexOf('.') + 1);
-
-      this.fileLocalization = fileName.substring(0, index);
+      this.projectData.localization = fileName.substring(0, index);
+      this.projectData.modified = false;
+      this.projectData.description = '';
+      return true;
     }
+    return false;
   }
 
   init() {
-    this.elementsArray = [];
+    if (this.elementsArray === undefined) {
+      this.elementsArray = [];
+    } else {
+      this.elementsArray.length = 0;
+    }
     this.projectData = {} as StoryBoardProject;
   }
 
@@ -43,23 +65,126 @@ export class Loader {
     return s.substring(0, s.length);
   }
 
-  processFile(fileName: string, content: string) {
-    this.init();
-
-    this.decomposeFileName(fileName);
-    this.projectData.localization = this.copy(this.fileLocalization);
-    this.projectData.file = this.copy(this.fileName);
-
-    const lines = content.split('\n');
-    if (lines.length > 0) {
-      lines.forEach(element => {
-        // alert(element);
-        if (element.substring(0, 5).indexOf('#name') === 0) {
-          this.projectData.name = element.substring(5);
-        }
-      });
+  private decomposeCommand(line: string): boolean {
+    if ('' !== line) {
+      const point = line.search(' ');
+      if (point >= 0) {
+        this.command = line.substring(0, point).trim().toLowerCase();
+        this.argument = line.substring(point + 1).trim();
+        return true;
+      }
     }
-    this.debug();
+    return false;
+  }
+
+  private commandIs(value: string): boolean {
+    return value === this.command;
+  }
+
+  private setDefaults() {
+    if (this.decomposeCommand(this.argument)) {
+      // settings
+      if (this.command === 'extension') {
+        this.extension = this.argument;
+      }
+    }
+  }
+
+  private buildFileName(): string {
+    let e = '';
+    if ('' !== this.extension) {
+      e += '.' + this.extension;
+    }
+
+    return this.projectData.localization + this.d + this.command + this.d + this.argument + e;
+  }
+
+  private addElement() {
+    this.id ++;
+    const element: StoryBoardElement = {
+      id: this.id,
+      name: '', // *
+      fileName: this.buildFileName(),
+      category: this.command,
+      content: '', // *
+      state: 1
+    };
+    // *) filled when building process is done
+    this.elementsArray.push(element);
+  }
+
+  private addDescription(line: string) {
+    this.projectData.description += line + '\n';
+  }
+
+  private processLine(line: string) {
+    if ('' !== line) {
+      if ('pinned:' === line.toLowerCase()) {
+        this.pins = true;
+      } else {
+
+        if (this.pins) {
+          // processing pins
+          if (this.decomposeCommand(line)) {
+            if (this.commandIs('set')) {
+              this.setDefaults();
+            } else {
+              this.addElement();
+            }
+          }
+        } else {
+          this.addDescription(line);
+        }
+      }
+    }
+  }
+
+  private activate(element: StoryBoardElement) {
+    const content = fs.readFileSync(element.fileName, 'utf-8').replace(new RegExp('\r', 'g'), '');
+    const lines = content.split('\n');
+    let first = true;
+    lines.forEach(line => {
+      if (first) {
+        first = false;
+        element.name = line.trim();
+      } else {
+        element.content += line.trim();
+      }
+    });
+  }
+
+  private activateElements() {
+    this.elementsArray.forEach(element => {
+      this.activate(element);
+    });
+  }
+
+  processFile(fileName: string): boolean {
+    this.init();
+    const content = fs.readFileSync(fileName, 'utf-8');
+
+    if (this.retrieveInitialProjectData(fileName)) {
+
+      const lines = content.split('\n');
+      let count = 0;
+
+      if (lines.length > 0) {
+        lines.forEach(element => {
+          element = element.trim();
+          count ++;
+          if (1 === count) {
+            this.projectData.name = element;
+          } else {
+            this.processLine(element);
+          }
+        });
+        this.activateElements();
+        return true;
+      }
+
+    }
+    return false;
+    // this.debug();
   }
 
 }

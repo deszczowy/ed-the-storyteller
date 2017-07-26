@@ -7,8 +7,7 @@ import { StoryBoardElement } from './classess/story-board-element.class';
 @Component({
   selector: 'story-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [DataService]
+  styleUrls: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit {
@@ -25,7 +24,7 @@ export class AppComponent implements OnInit {
 
   updateFromService() {
     // act on the promise
-    this.data.getElements()
+    this.data.getStoryboardElements()
       .then(storyboard => this.storyboard = storyboard);
     this.data.getProject()
       .then(project => this.project = project);
@@ -100,14 +99,12 @@ export class AppComponent implements OnInit {
         }
       );
 
-    this.data.openProject(
-      files[0],
-      fs.readFileSync(files[0], 'utf-8')
-    );
+    this.data.openProject(files[0]);
     this.updateFromService();
   }
 
   projectSave() {
-
+    this.data.saveData();
+    alert('Saved.');
   }
 }
