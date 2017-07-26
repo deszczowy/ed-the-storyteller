@@ -1,0 +1,21 @@
+My new storyboard
+
+And this is short description of my new storyboard. 
+
+I decide to write it down in two lines.
+
+pinned:
+
+set extension txt
+actor Female_character
+actor Male_character
+actor An_Alien
+place Lonely_farm
+place Shopping_mall
+item Golden_neckles
+item Alien_treasure
+note First_note
+note Second_note
+story Begin
+story Middle
+story End
