@@ -1,6 +1,6 @@
 My new storyboard
 
-And this is short description of my new storyboard. 
+And this is short description of my new storyboard.
 
 I decide to write it down in two lines.
 
@@ -16,6 +16,7 @@ item Golden_neckles
 item Alien_treasure
 note First_note
 note Second_note
+set extension md
 story Begin
 story Middle
 story End
