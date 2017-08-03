@@ -13,7 +13,7 @@ import { DataService } from '../service/data.service';
 
 export class BoardComponent {
   @Input() elements: StoryBoardElement[];
-  activeCard: StoryBoardElement;
+  @Input() activeCard: StoryBoardElement;
 
   onAction(event: StoryBoardElement): void {
     if (event === null) {

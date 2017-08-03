@@ -22,8 +22,17 @@ export class PadComponent implements OnInit {
     this.back.emit(null);
   }
 
+  isNew() {
+    return 0 === this.element.id;
+  }
+
   save() {
-    this.data.saveElement(this.element);
+    alert('save');
+    if (this.isNew()) {
+      this.data.addElement(this.element);
+    } else {
+      this.data.saveElement(this.element);
+    }
     alert('Save changes in element');
     this.quitEdit();
   }

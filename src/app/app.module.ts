@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { CardComponent } from './card/card.component';
 import { PadComponent } from './pad/pad.component';
+import { SearchComponent } from './search/search.component';
+
 import { DataService } from './service/data.service';
 
 
@@ -14,7 +16,8 @@ import { DataService } from './service/data.service';
     AppComponent,
     BoardComponent,
     CardComponent,
-    PadComponent
+    PadComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

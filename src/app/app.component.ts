@@ -1,8 +1,11 @@
+import { Debug } from './classess/debug.class';
 import { DataService } from './service/data.service';
 import { Component, OnInit } from '@angular/core';
 import { BoardComponent } from './board/board.component';
 import { StoryBoardProject } from './classess/story-board-project.class';
 import { StoryBoardElement } from './classess/story-board-element.class';
+import { ProjectWriter } from './classess/project-writer.class';
+import { SearchComponent } from './search/search.component';
 
 @Component({
   selector: 'story-root',
@@ -12,11 +15,18 @@ import { StoryBoardElement } from './classess/story-board-element.class';
 
 export class AppComponent implements OnInit {
   title = 'Ed, The Storyteller';
+  subSelect: boolean;
+  toggleSearch: boolean;
 
   project: StoryBoardProject;
+  allData: StoryBoardElement[];
   storyboard: StoryBoardElement[];
 
-  constructor(private data: DataService) {}
+  card: StoryBoardElement;
+
+  constructor(private data: DataService) {
+    this.subSelect = false;
+  }
 
   ngOnInit() {
     this.data.init();
@@ -24,87 +34,138 @@ export class AppComponent implements OnInit {
 
   updateFromService() {
     // act on the promise
+    this.data.getAllData()
+      .then(allData => this.allData = allData);
     this.data.getStoryboardElements()
       .then(storyboard => this.storyboard = storyboard);
     this.data.getProject()
       .then(project => this.project = project);
   }
 
+  private slide() {
+    this.subSelect = true;
+  }
+
+  private roll() {
+    this.subSelect = false;
+  }
+
   menuItemNewCardClick() {
-    alert('New card');
+    this.card = new StoryBoardElement();
+    this.card.id = 0;
+    this.card.category = 'story';
+    this.card.extension = 'txt';
+    this.card.state = 2;
+    Debug.info(JSON.stringify(this.card));
   }
 
   menuItemNewResourceClick() {
-    alert('New resource');
+    Debug.info('New resource');
+    this.slide();
   }
 
   menuItemResourceListClick() {
-    alert('Resources list');
+    Debug.info('Resources list');
+    this.slide();
   }
 
   menuItemSearchClick() {
-    alert('Search');
+    Debug.info('Search');
+    this.toggleSearch = true;
+  }
+
+  actionSearch(event: boolean) {
+    this.toggleSearch = event;
   }
 
   submenuItemActorsClick() {
-    alert('Actors');
+    Debug.info('Actors');
+    this.roll();
   }
 
   submenuItemItemsClick() {
-    alert('Items');
+    Debug.info('Items');
+    this.roll();
   }
 
   submenuItemPlacesClick() {
-    alert('Places');
+    Debug.info('Places');
+    this.roll();
   }
 
   submenuItemNotesClick() {
-    alert('Notes');
+    Debug.info('Notes');
+    this.roll();
   }
 
   showStatistics() {
-    alert('Statistics');
+    Debug.info('Statistics');
   }
 
   showMenu() {
-    alert('Big menu');
+    Debug.info('Big menu');
   }
 
-  projectNew() {
-    let questionAnswer = 0;
+  isProjectModified() {
+    return this.project !== null && this.project !== undefined && this.project.modified;
+  }
 
-    if (this.project.modified) {
+  question(condition: boolean, message: string) {
+    let questionAnswer = 500;
+    if (condition) {
       questionAnswer =
       electron.remote.dialog.showMessageBox(
         {
-          message: 'Project got modify. Do You want to discard those changes and start over with new project?',
-          buttons: ['Yes', 'No'],
+          message: message,
+          buttons: ['Yes', 'No'], // 0, 1
         }
       );
     }
+    return questionAnswer;
+  }
 
-    if (0 === questionAnswer) {
+  projectNew() {
+    if (1 !== this.question(
+      this.isProjectModified() ,
+      'Project got modify. Do You want to discard those changes and start over with new project?')
+    ) {
       this.data.startNew();
     }
     this.updateFromService();
   }
 
   projectOpen() {
-    const files =
-      electron.remote.dialog.showOpenDialog(
-        {
-          filters: [
-            { name: 'text', extensions: ['txt'] }
-          ]
-        }
-      );
+    // yes or no question
+    if (1 !== this.question(
+      this.isProjectModified() ,
+      'Project got modify. Do You want to discard those changes and load next project?')
+    ) {
+      const files =
+        electron.remote.dialog.showOpenDialog(
+          {
+            filters: [
+              { name: 'text', extensions: ['txt'] }
+            ]
+          }
+        );
 
-    this.data.openProject(files[0]);
-    this.updateFromService();
+      this.data.openProject(files[0]);
+      this.updateFromService();
+    }
   }
 
   projectSave() {
-    this.data.saveData();
-    alert('Saved.');
+    if (0 === this.question(
+      this.isProjectModified() ,
+      'Do You want to save all changes?')
+    ) {
+      const writer: ProjectWriter = new ProjectWriter();
+      writer.save(
+        this.project,
+        this.allData
+      );
+      this.updateFromService();
+    }
   }
+
 }

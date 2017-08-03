@@ -1,5 +1,6 @@
 import { StoryBoardElement } from './story-board-element.class';
 import { StoryBoardProject } from './story-board-project.class';
+import { Debug } from './debug.class';
 
 export class Loader {
 
@@ -21,13 +22,13 @@ export class Loader {
   }
 
   private debug() {
-    alert('Localization: ' + this.projectData.localization);
-    alert('Project root file: ' + this.projectData.file);
-    alert('Project name: ' + this.projectData.name);
-    alert('Project description: ' + this.projectData.description);
+    Debug.info('Localization: ' + this.projectData.localization);
+    Debug.info('Project root file: ' + this.projectData.file);
+    Debug.info('Project name: ' + this.projectData.name);
+    Debug.info('Project description: ' + this.projectData.description);
 
     this.elementsArray.forEach(element => {
-      alert(JSON.stringify(element));
+      Debug.info(JSON.stringify(element));
     });
   }
 
@@ -44,7 +45,7 @@ export class Loader {
       }
       this.projectData.file = f;
 
-      this.projectData.localization = fileName.substring(0, index);
+      this.projectData.localization = fileName.substring(0, index + 1);
       this.projectData.modified = false;
       this.projectData.description = '';
       return true;
@@ -53,6 +54,7 @@ export class Loader {
   }
 
   init() {
+    Debug.info('loader initialize');
     if (this.elementsArray === undefined) {
       this.elementsArray = [];
     } else {
@@ -90,13 +92,13 @@ export class Loader {
     }
   }
 
-  private buildFileName(): string {
+  private buildFileName(category: string, resource: string, extension: string): string {
     let e = '';
-    if ('' !== this.extension) {
-      e += '.' + this.extension;
+    if ('' !== extension) {
+      e += '.' + extension;
     }
 
-    return this.projectData.localization + this.d + this.command + this.d + this.argument + e;
+    return this.projectData.localization + this.d + category + this.d + resource + e;
   }
 
   private addElement() {
@@ -104,10 +106,12 @@ export class Loader {
     const element: StoryBoardElement = {
       id: this.id,
       name: '', // *
-      fileName: this.buildFileName(),
+      resource: this.argument,
       category: this.command,
       content: '', // *
-      state: 1
+      state: 1,
+      extension: this.extension,
+      fileName: this.buildFileName(this.command, this.argument, this.extension)
     };
     // *) filled when building process is done
     this.elementsArray.push(element);
@@ -140,7 +144,8 @@ export class Loader {
   }
 
   private activate(element: StoryBoardElement) {
-    const content = fs.readFileSync(element.fileName, 'utf-8').replace(new RegExp('\r', 'g'), '');
+    const content = fs.read(element.fileName).replace(new RegExp('\r', 'g'), '');
+
     const lines = content.split('\n');
     let first = true;
     lines.forEach(line => {
@@ -161,7 +166,7 @@ export class Loader {
 
   processFile(fileName: string): boolean {
     this.init();
-    const content = fs.readFileSync(fileName, 'utf-8');
+    const content = fs.read(fileName);
 
     if (this.retrieveInitialProjectData(fileName)) {
 
@@ -179,12 +184,17 @@ export class Loader {
           }
         });
         this.activateElements();
+        this.debug();
         return true;
       }
 
     }
+    Debug.error('stop');
     return false;
-    // this.debug();
+  }
+
+  getProject() {
+    return this.projectData;
   }
 
 }

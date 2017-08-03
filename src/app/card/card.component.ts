@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { StoryBoardElement } from './../classess/story-board-element.class';
+import { Debug } from '../classess/debug.class';
+
 
 @Component({
   selector: 'story-card',
@@ -17,6 +19,6 @@ export class CardComponent {
   }
 
   deleteCard(card: StoryBoardElement) {
-    alert('Delete of ' + card.name);
+    Debug.info('Delete of ' + card.name);
   }
 }

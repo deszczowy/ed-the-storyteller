@@ -1,8 +1,11 @@
+declare const Buffer;
+
 import { StoryBoardElement } from './../classess/story-board-element.class';
 import { Injectable } from '@angular/core';
 import { StoryBoardProject } from './../classess/story-board-project.class';
-import { ELEMENTS } from './mock-data';
 import { Loader } from '../classess/loader.class';
+import { ProjectWriter } from '../classess/project-writer.class';
+import { Debug } from './../classess/debug.class';
 
 @Injectable()
 export class DataService {
@@ -14,13 +17,15 @@ export class DataService {
   init() {
     this.storyboard = [];
     this.data = [];
-    this.project = {} as StoryBoardProject;
-    this.project.modified = false;
   }
 
   /* Promise example - leave this for further reference. */
   getStoryboardElements(): Promise<StoryBoardElement[]> {
     return Promise.resolve(this.storyboard);
+  }
+
+  getAllData(): Promise<StoryBoardElement[]> {
+    return Promise.resolve(this.data);
   }
 
   getProject(): Promise<StoryBoardProject> {
@@ -29,6 +34,7 @@ export class DataService {
 
   startNew() {
     this.init();
+    this.project = new StoryBoardProject();
   }
 
   openProject(filePath: string) {
@@ -37,10 +43,12 @@ export class DataService {
     );
     if (loader.processFile(filePath)) {
       this.process();
+      this.project = loader.getProject();
     }
   }
 
   process() {
+    this.storyboard = [];
     this.data.forEach(element => {
       if ('story' === element.category) {
         this.storyboard.push(element);
@@ -58,19 +66,33 @@ export class DataService {
     return e;
   }
 
+  setModified() {
+    this.project.modified = true;
+  }
+
   saveElement(element: StoryBoardElement) {
     const e = this.getElementOfId(element.id) as StoryBoardElement;
     e.content = element.content;
     e.name = element.name;
     e.state = 2;
+    this.setModified();
   }
 
-  saveData() {
-    this.data.forEach(element => {
-      if (2 === element.state) {
-        alert('Building file for ' + element.name);
-        alert('Saving file: ' + element.fileName);
-      }
-    });
+  addElement(element: StoryBoardElement) {
+    alert('add');
+    let e = '';
+    if (element.extension !== '') { e = '.' + element.extension; }
+    element.id = this.data.length + 1;
+    element.resource = element.name.replace(new RegExp(' ', 'g'), '_');
+    element.fileName = this.project.localization + path.sep + element.category + path.sep + element.resource + e;
+    Debug.info(JSON.stringify(element));
+    this.data.push(element);
+    this.setModified();
+  }
+
+  removeElement(element: StoryBoardElement) {
+    const e = this.getElementOfId(element.id) as StoryBoardElement;
+    e.state = 0;
+    this.setModified();
   }
 }
