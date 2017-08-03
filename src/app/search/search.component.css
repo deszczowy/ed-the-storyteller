@@ -1,0 +1,28 @@
+.search{
+  position: fixed;
+  top: 25px;
+  left: 50%;
+
+  width: 300px;
+  margin-left: -150px;
+
+  border: 1px solid #444;
+  background-color: #fff;
+  z-index: 60;
+}
+
+.search .row{
+  padding: 0px;
+}
+
+.search input[text]{
+  margin: 0px;
+}
+
+.button{
+  border: 1px solid #444;
+  width: 50px;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
